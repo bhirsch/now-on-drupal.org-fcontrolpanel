@@ -87,20 +87,10 @@ function fcontrolpanel_export_fcontrol(&$form_state, $fcid) {
 
 /**
  * Load a single myobj.
- *
- * TODO
- * Note: http://stellapower.net/content/using-chaos-tools-module-create-exportables
- * Stella has $oid as the param here rather than $name, which is what Ctools documentation says.
  */
-// TODO 
 function fcontrolpanel_fcontrol_load($name) {
   ctools_include('export');
-  // TODO note: this said mymodule_myobjs, everything else says mymodule_myobj
-  // I'm not sure if this should be
-  // ctools_export_load_object('fcontrolpanel_fcontrols'...
-  // or 
-  // ctools_export_load_object('fcontrolpanel_fcontrol'...
-  $result = ctools_export_load_object('fcontrolpanel_fcontrols', 'names', array($name));
+  $result = ctools_export_load_object('fcontrolpanel_fcontrol', 'names', array($name)); //  % = test2, form shows: $ = new stdClass; AND title shows!
   if (isset($result[$name])) {
     return $result[$name];
   }
@@ -111,8 +101,7 @@ function fcontrolpanel_fcontrol_load($name) {
  */
 function fcontrolpanel_fcontrol_export($obj, $indent = '') {
   ctools_include('export');
-  // TODO same issue as above mymodule_myobjs v. mymodule_myobj
-  $output = ctools_export_object('fcontrolpanel_fcontrols', $obj, $indent);
+  $output = ctools_export_object('fcontrolpanel_fcontrol', $obj, $indent);
   return $output;
 }
 
