@@ -1,0 +1,7 @@
+; $Id $
+name = Features Control Panel
+description = Provide end-users a single control panel for all the features on their webiste. 
+core = 6.x
+version = "6.x-1.0"
+package = "Features"
+project = "Features Control Panel"
