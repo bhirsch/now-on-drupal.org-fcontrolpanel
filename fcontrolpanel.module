@@ -90,7 +90,7 @@ function fcontrolpanel_export_fcontrol(&$form_state, $fcid) {
  */
 function fcontrolpanel_fcontrol_load($name) {
   ctools_include('export');
-  $result = ctools_export_load_object('fcontrolpanel_fcontrol', 'names', array($name)); //  % = test2, form shows: $ = new stdClass; AND title shows!
+  $result = ctools_export_load_object('fcontrolpanel_fcontrol', 'names', array($name)); 
   if (isset($result[$name])) {
     return $result[$name];
   }
