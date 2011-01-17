@@ -121,6 +121,22 @@ function fcontrolpanel_schema() {
         'default' => '',
         'description' => 'Written instructions',
       ),
+      // required permission
+      'permission' => array(
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Permissions required to access this control.',
+      ),
+      // fcontrol weight 
+      'weight' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Control weight (default: 0)',
+      ),
     ),
     'primary key' => array('fcid'),
     'unique keys' => array(
@@ -130,12 +146,40 @@ function fcontrolpanel_schema() {
 
   return $schema;
 }
-// */
 
 /**
  * Implementation of hook_update_N.
+ * 
+ * Add permission field.
  */
-/*
 function fcontrolpanel_update_6001() {
+  $ret = array();
+  $table = 'fcontrolpanel_fcontrol';
+  $field = 'permission';
+  $spec = array(
+    'type' => 'varchar',
+    'length' => '64',
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Permissions required to access this control.',
+  );
 }
-// */
+/**
+ * Implementation of hook_update_N.
+ *
+ * Add weight field.
+ */
+function fcontrolpanel_update_6002() {
+  db_add_field(&$ret, $table, $field, $spec, $new_keys);
+  $ret = array();
+  $table = 'fcontrolpanel_fcontrol';
+  $field = 'weight';
+  $spec = array(
+    'type' => 'int',
+    'unsigned' => FALSE,
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Control weight (default: 0)',
+  );
+  db_add_field(&$ret, $table, $field, $spec, $new_keys);
+}

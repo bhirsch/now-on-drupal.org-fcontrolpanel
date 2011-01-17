@@ -7,6 +7,7 @@
 // TODO GUI FOR CREATING FEATURE SETS W/ LINKS IN CONTROL PANEL
 // TODO Make control panel stuff exportable with features
 
+
 /**
  * Implementation of hook_help()
  */
@@ -29,10 +30,32 @@ function fcontrolpanel_menu() {
     'access arguments' => array('fcontrolpanel export permission'),
     'type' => menu_callback,
   );
+  $items['admin/fcontrolpanel'] = array(
+    'title' => 'Features Control Panel',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('fcontrolpanel_page'),
+    'access arguments' => array('access features control panel'),
+    'file' => 'fcontrolpanel.page.inc',
+    'type' => menu_callback,
+  );
 
   return $items;
 }
 
+/**
+ * Implementation of hook_perm().
+ */
+function fcontrolpanel_perm() {
+  return array('access features control panel');
+}
+
+/*
+function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'ctools_export_ui_list_form') {
+    dsm($form);  
+  }
+}
+// */
 
 /**
  * Implementation of hook_theme().
@@ -61,6 +84,60 @@ function theme_fcontrolpanel_example($something) {
 }
 // */
 
+//--------------------------------------------------/
+// Ctools plugin                                    /
+//--------------------------------------------------/
+/**
+ * Implmenentation of hook_ctools_plugin_directory.
+ */
+function fcontrolpanel_ctools_plugin_directory($module, $plugin) {
+  if ($plugin == 'export_ui') {
+    return 'plugins/'. $plugin;
+  }
+}
+
+/**
+* Implementation of hook_ctools_plugin_api().
+*
+* Tell CTools that we support the default_mymodule_presets API.
+*/
+function fcontrolpanel_ctools_plugin_api($owner, $api) {
+  if ($owner == 'fcontrolpanel' && $api == 'default_fcontrolpanel_fcontol') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implementation of default hook, hook_default_mymodule_myobj().
+ *
+ * Provide a couple of default presets.
+ *
+ * Note: This function name is defined in .install file,
+ *   'default hook' => 'default_mymodule_myobj',  // Function hook name.
+ */ 
+// TODO figure out why this doesn't seem to work.
+function fcontrolpanel_default_fcontrolpanel_fcontrol() {
+  $export = array();
+
+  $export = array();
+  $fcontrol = new stdClass;
+  $fcontrol->disabled = FALSE; /* Edit this to true to make a default fcontrol disabled initially */
+  $fcontrol->api_version = 1;
+  $fcontrol->package = 'example';
+  $fcontrol->title = 'This is an example';
+  $fcontrol->name = 'example';
+  $fcontrol->path = 'admin/example';
+  $fcontrol->query = 'x=y&a=b';
+  $fcontrol->description = 'This is an example control for the features control panel.';
+  $fcontrol->video_title = 'Instructional Video';
+  $fcontrol->video = '<embed>YouTube video here.</embed>';
+  $fcontrol->instructions_title = '3 Steps to Blah De Blah';
+  $fcontrol->instructions = 'Step 1. blee. Step 2. Blah. Step 3. Blo.';
+
+  $export['example'] = $fcontrol;
+  return $export;
+}
+
 
 //--------------------------------------------------/
 // Ctools export hooks                              /
@@ -68,9 +145,12 @@ function theme_fcontrolpanel_example($something) {
 
 /**
  * Export a myobj and display it in a form.
+ * 
+ * @param $name
+ *  string, unique id for object
  */
-function fcontrolpanel_export_fcontrol(&$form_state, $fcid) {
-  $obj = fcontrolpanel_fcontrol_load($fcid);
+function fcontrolpanel_export_fcontrol(&$form_state, $name) {
+  $obj = fcontrolpanel_fcontrol_load($name);
   drupal_set_title(check_plain($obj->description));
   $code = fcontrolpanel_fcontrol_export($obj);
   $lines = substr_count($code, "\n");
@@ -114,14 +194,6 @@ function fcontrolpanel_fcontrol_save(&$myobj) {
       return drupal_write_record('myobj', $myobj, $update);
 }
 
-/**
- * Implementation of default hook.
- *
- * Note: This function name is defined in .install file,
- *   'default hook' => 'default_mymodule_myobj',  // Function hook name.
- */ 
-function fcontrolpanel_default_fcontrolpanel_fcontrol() {
-}
 
 
 //-------------------------------------------------/
