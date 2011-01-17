@@ -108,5 +108,19 @@ function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
     '#default_value' => $fcontrol->video,
     '#required' => false,
   );
+  $form['permission'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Required Permission'),
+    '#description' => t(''),
+    '#default_value' => $fcontrol->permission,
+    '#required' => false,
+  );
+  $form['weight'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Weight'),
+    '#description' => t('Sort order of controls'),
+    '#default_value' => $fcontrol->weight,
+    '#required' => false,
+  );
 
 }

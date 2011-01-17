@@ -34,7 +34,11 @@ function fcontrolpanel_page() {
       '#type' => 'item',
       '#title' => $link,
       '#value' => t($fcontrol->description),
+      '#weight' => $fcontrol->weight,
     );
+    if ($fcontrol->permission) {
+      $form[$package][$fcontrol->name]['#access'] = user_access($fcontrol->permission);
+    }
     // Video
     // Instructions
   }
