@@ -68,7 +68,7 @@ function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Path'),
     '#description' => t('Send users to this path, e.g. admin/example'),
-    '#default_value' => $fcontrol->name,
+    '#default_value' => $fcontrol->path,
     '#required' => true,
   );
   $form['query'] = array(
