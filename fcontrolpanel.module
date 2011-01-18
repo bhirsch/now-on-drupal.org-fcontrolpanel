@@ -218,7 +218,7 @@ function fcontrolpanel_get_packages() {
  */
 function fcontrolpanel_admin_toolbar($status) {
   if(module_exists('admin') && ($status == 'enable' || $status == 'disable')) {
-    $admin_toolbar = variable_get('admin_toolbar');
+    $admin_toolbar = variable_get('admin_toolbar', NULL);
     // Check for existing FCP blocks on admin toolbar.
     foreach($admin_toolbar['blocks'] as $key => $value) {
       $x = substr($key, 0, 13);
