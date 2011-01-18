@@ -188,7 +188,7 @@ function fcontrolpanel_get_packages() {
       } 
     }
     // default, sort alphabetical (handle sort by weight elsewhere)
-    sort($packages[$i]['fcontrols'], $packages[$i]['fcontrols']);
+    sort($packages[$i]['fcontrols']);
     $i++;
   }
   
