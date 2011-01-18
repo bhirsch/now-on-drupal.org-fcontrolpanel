@@ -10,40 +10,38 @@
 function fcontrolpanel_page() {
   $fcontrols = ctools_export_load_object('fcontrolpanel_fcontrol');
 
+  $packages = fcontrolpanel_get_packages();
+
   // set up fieldsets
-  foreach($fcontrols as $fcontrol) {
-    $package_title = $fcontrol->package;
-    $package = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $package_title));
-    $form[$package] = array(
+  foreach ($packages as $package) {
+    $package_name = $package['package_name'];
+    $package_title = $package['package_title'];
+    $form[$package_name] = array(
       '#title' => t($package_title),
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     ); 
-  }
-  // fill field sets with fcontrols
-  foreach($fcontrols as $fcontrol) {
-    $package_title = $fcontrol->package;
-    $package = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $package_title));
-    // Link
-    $txt = t($fcontrol->title);
-    $path = $fcontrol->path;
-    $query = $fcontrol->query;
-    $link = l($txt, $path, array('query' => $query));
-    $form[$package][$fcontrol->name] = array(
-      '#type' => 'item',
-      '#title' => $link,
-      '#value' => t($fcontrol->description),
-      '#weight' => $fcontrol->weight,
-      '#theme' => 'fcontrolpanel_fcontrol',
-    );
-    if ($fcontrol->permission) {
-      $form[$package][$fcontrol->name]['#access'] = user_access($fcontrol->permission);
+    // fill fieldsets with fcontrols
+    foreach ($package['fcontrols'] as $fcontrol) {
+      $txt = t($fcontrol->title);
+      $path = $fcontrol->path;
+      $query = $fcontrol->query;
+      $link = l($txt, $path, array('query' => $query));
+      $form[$package_name][$fcontrol->name] = array(
+        '#type' => 'item',
+        '#title' => $link,
+        '#value' => t($fcontrol->description),
+        '#weight' => $fcontrol->weight,
+        '#theme' => 'fcontrolpanel_fcontrol',
+      );
+      if ($fcontrol->permission) {
+        $form[$package][$fcontrol->name]['#access'] = user_access($fcontrol->permission);
+      }
     }
-    // Video
-    // Instructions
   }
-
+  // TODO Video
+  // TODO Instructions
   return $form; 
 }
 
