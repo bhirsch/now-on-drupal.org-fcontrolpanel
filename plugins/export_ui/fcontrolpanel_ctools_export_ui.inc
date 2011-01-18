@@ -80,6 +80,7 @@ function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
     '#default_value' => $fcontrol->query,
     '#required' => false,
   );
+  /*  // TODO Figure out how to display this stuff on admin/fcontrolpanel page
   $form['video_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Instructional Video Title'),
@@ -108,6 +109,7 @@ function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
     '#default_value' => $fcontrol->video,
     '#required' => false,
   );
+  // */
   $form['permission'] = array(
     '#type' => 'textfield',
     '#title' => t('Required Permission'),
