@@ -35,6 +35,7 @@ function fcontrolpanel_page() {
       '#title' => $link,
       '#value' => t($fcontrol->description),
       '#weight' => $fcontrol->weight,
+      '#theme' => 'fcontrolpanel_fcontrol',
     );
     if ($fcontrol->permission) {
       $form[$package][$fcontrol->name]['#access'] = user_access($fcontrol->permission);
@@ -44,4 +45,18 @@ function fcontrolpanel_page() {
   }
 
   return $form; 
+}
+
+/**
+ * Implementation of theme function for form elements.
+ */
+function theme_fcontrolpanel_fcontrol($element) {
+  $path = drupal_get_path('module', 'fcontrolpanel');
+  drupal_add_css("$path/fcontrolpanel.css");
+
+  $output = '';
+  $output .= '<div class="fcontrol-title">'. $element['#title'] .'</div>';
+  $output .= '<div class="fcontrol-description">'. $element['#value'] .'</div>';
+  $output = '<div class="fcontrol">'. $output .'</div>'; 
+  return $output;
 }

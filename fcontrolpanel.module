@@ -4,9 +4,9 @@
  *  
  */
  
-// TODO GUI FOR CREATING FEATURE SETS W/ LINKS IN CONTROL PANEL
-// TODO Make control panel stuff exportable with features
-
+//--------------------------------//
+// core Drupal hooks              //
+//--------------------------------//
 
 /**
  * Implementation of hook_help()
@@ -60,29 +60,106 @@ function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implementation of hook_theme().
  */
-/*
 function fcontrolpanel_theme() {
   return array(
-    'fcontrolpanel_example' => array(
-      'arguments' => array('something' => NULL),
-    )
+    'fcontrolpanel_fcontrol' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'fcontrolpanel_admin_block' => array(
+      'arguments' => array('package' => NULL),
+    ),
   );
 }
-// */
- 
+
+
 /**
- * Implementation of theme function.
+ * Implementation of hook_block().
  */
-/*
-function theme_fcontrolpanel_example($something) {
+function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
+  $packages = fcontrolpanel_get_packages();
+  if ($op == 'list') {
+    foreach($packages as $n => $package) {
+      $blocks[$n]['info'] = $package['package_title'];  
+      $blocks[$n]['admin'] = TRUE;
+    }  
+    return $blocks;
+  } else if ($op == 'view') {
+    $package = $packages[$delta];
+    $block['subject'] = t($package['package_title']);
+    $block['content'] = theme('fcontrolpanel_admin_block', $package);
+    return $block;
+  }
+}
+
+/**
+ * Implement theme_fcontrolpanel_admin_block. 
+ * 
+ * Each package (feature set) gets a corresponding block
+ * for the admin module's admin toolbar.
+ * 
+ * @param $package
+ *  array, all the fcontrols for the package.
+ * 
+ * @return $output
+ *  string, HTML for block content.
+ */
+function theme_fcontrolpanel_admin_block($package) {
   $output = '';
-  // add stylesheet
-  $path = drupal_get_path('module', 'fcontrolpanel');
-  drupal_add_css("$path/fcontrolpanel.css");
-  // build $output 
+  $output.= '<ul class="menu">';
+
+  foreach($package['fcontrols'] as $fcontrol) {
+    $txt = t($fcontrol->title);
+    $path = $fcontrol->path;
+    $query = $fcontrol->query;
+    $perm = ($fcontrol->permission) ? $fcontrol->permission : 'access features control panel';
+    if (user_access($perm)) {
+      $link = l($txt, $path, array('query' => $query));
+      $output .= '<li class="leaf">'. $link .'</li>';
+    }
+  }
+
+  $output .= '</ul>';
+  
   return $output;
 }
-// */
+
+//----------------------------------------------//
+// fcontrolpanel                                //
+//----------------------------------------------//
+
+/**
+ * @return $packages
+ *  array, fcontrols organized by package
+ *
+ * $packages[$i]['package_name'] = package name
+ * $packages[$i]['package_title'] = $package_title; 
+ * $packages[$i]['fcontrols'][$fcontrol]
+ */
+function fcontrolpanel_get_packages() {
+  $fcontrols = ctools_export_load_object('fcontrolpanel_fcontrol');
+  // Make a unique list of packages;
+  foreach($fcontrols as $fcontrol) {
+    $package_title = $fcontrol->package;
+    $package = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $package_title));
+    $list[$package] = $package_title;
+  }
+  // Number packages.
+  $packages = array();
+  $i = 0;
+  foreach($list as $package => $package_title) {
+    $packages[$i]['package_name'] = $package;
+    $packages[$i]['package_title'] = $package_title;
+    // Organize fcontrols by package.
+    foreach($fcontrols as $fcontrol) {
+      if($fcontrol->package == $package_title) {
+        $packages[$i]['fcontrols'][] = $fcontrol;
+      } 
+    }
+    $i++;
+  }
+  
+  return $packages;
+}
 
 //--------------------------------------------------/
 // Ctools plugin                                    /
