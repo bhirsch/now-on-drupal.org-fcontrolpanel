@@ -1,0 +1,12 @@
+/* fcontrolpanel.css */
+
+.fcontrol-title 
+{
+  float:left;
+  width:250px;
+}
+
+.fcontrol 
+{
+  border-bottom:solid 3px #F4F4F4;
+}
