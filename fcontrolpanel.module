@@ -148,6 +148,10 @@ function fcontrolpanel_get_packages() {
     $package = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $package_title));
     $list[$package] = $package_title;
   }
+  // Sort package list in alphabetical order by $package_title.
+  // This is particularly important for making hook_block $delta 
+  // values correspond with aphabetical order for Admin Toolbar.
+  asort($list);
   // Number packages.
   $packages = array();
   $i = 0;
