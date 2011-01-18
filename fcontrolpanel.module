@@ -117,18 +117,33 @@ function theme_fcontrolpanel_admin_block($package) {
   $output = '';
   $output.= '<ul class="menu">';
 
+  // Build array of list items, but don't 
+  // add to $output before sorting by weight.
+  $lis = array();
   foreach($package['fcontrols'] as $fcontrol) {
+    // Info for building list items: 
     $txt = t($fcontrol->title);
     $path = $fcontrol->path;
     $query = $fcontrol->query;
     $perm = ($fcontrol->permission) ? $fcontrol->permission : 'access features control panel';
+    // Info for sorting list items: 
+    $weight = $fcontrol->weight;
+    $name = $fcontrol->name;
+    $key = $weight .'-'. $name;
     //$desc = t($fcontrol->description);
     if (user_access($perm)) {
         $link = l($txt, $path, array('query' => $query));
         //$description = '<span class="menu-description"><span class="icon"></span>'. $desc .'</span>';
         //$output .= '<li class="leaf">'. $link . $description .'</li>';
-        $output .= '<li class="leaf">'. $link .'</li>';
+        //$output .= '<li class="leaf">'. $link .'</li>';
+        $lis[$key] = '<li class="leaf">'. $link .'</li>';
     }
+  }
+  // Sort by $key.
+  ksort($lis);
+  // Add <li>'s to output
+  foreach($lis as $li) {
+    $output .= $li;  
   }
 
   $output .= '</ul>';
@@ -172,6 +187,8 @@ function fcontrolpanel_get_packages() {
         $packages[$i]['fcontrols'][] = $fcontrol;
       } 
     }
+    // default, sort alphabetical (handle sort by weight elsewhere)
+    sort($packages[$i]['fcontrols'], $packages[$i]['fcontrols']);
     $i++;
   }
   
