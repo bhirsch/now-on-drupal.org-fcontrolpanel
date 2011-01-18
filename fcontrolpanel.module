@@ -49,10 +49,18 @@ function fcontrolpanel_perm() {
   return array('access features control panel');
 }
 
-/*
+/**
+ * Implementation of hook_form_alter().
+ */
 function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'ctools_export_ui_list_form') {
-    dsm($form);  
+  //if ($form_id == 'ctools_export_ui_list_form') {
+  //  dsm($form);  
+  //}
+  if($form_id == 'user_login') {
+    // Access control and $form['#redirect'] = 'admin/fcontrolpanel' doesn't work
+    // here because the user's status changes from anonymous to [role]
+    // after they successfully log in.
+    $form['#submit'][] = 'fcontrolpanel_goto_fcontrolpanel';
   }
 }
 // */
@@ -222,6 +230,17 @@ function fcontrolpanel_admin_toolbar($status) {
       }
     }
     variable_set('admin_toolbar', $admin_toolbar);
+  }
+}
+
+/**
+ * Redirect users to path: admin/fcontrolpanel.
+ *
+ * This function is called after successful login.
+ */
+function fcontrolpanel_goto_fcontrolpanel() {
+  if (user_access('access features control panel')) {
+    drupal_goto('admin/fcontrolpanel'); 
   }
 }
 
