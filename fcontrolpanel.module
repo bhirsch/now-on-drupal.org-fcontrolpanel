@@ -31,7 +31,7 @@ function fcontrolpanel_menu() {
     'type' => menu_callback,
   );
   $items['admin/fcontrolpanel'] = array(
-    'title' => 'Features Control Panel',
+    'title' => 'Control Panel',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('fcontrolpanel_page'),
     'access arguments' => array('access features control panel'),
@@ -102,6 +102,8 @@ function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
  * 
  * @return $output
  *  string, HTML for block content.
+ *
+ * todo: Consider making packages into real menus.
  */
 function theme_fcontrolpanel_admin_block($package) {
   $output = '';
@@ -112,9 +114,12 @@ function theme_fcontrolpanel_admin_block($package) {
     $path = $fcontrol->path;
     $query = $fcontrol->query;
     $perm = ($fcontrol->permission) ? $fcontrol->permission : 'access features control panel';
+    //$desc = t($fcontrol->description);
     if (user_access($perm)) {
-      $link = l($txt, $path, array('query' => $query));
-      $output .= '<li class="leaf">'. $link .'</li>';
+        $link = l($txt, $path, array('query' => $query));
+        //$description = '<span class="menu-description"><span class="icon"></span>'. $desc .'</span>';
+        //$output .= '<li class="leaf">'. $link . $description .'</li>';
+        $output .= '<li class="leaf">'. $link .'</li>';
     }
   }
 
@@ -159,6 +164,61 @@ function fcontrolpanel_get_packages() {
   }
   
   return $packages;
+}
+
+/**
+ * @param $status
+ *  string, 'enable' or 'disable'
+ * 
+ * This function is responsible for updating the admin module's
+ * administrative toolbar to include fcontrolpanel blocks.
+ * 
+ * Features Control Panel features modules should call this 
+ * function on hook_enable() and hook_disable().
+ * 
+ * If Admin module is enabled, all fcontrolpanel blocks
+ * should be automatically added to the toolbar when Features Control Panel
+ * features are enabled. 
+ *
+ * Admin keeps track of blocks in a variable in the variable table
+ * called admin_toolbar. Each enabled block is stored like this: 
+ * $admin_toolbar['blocks']['fcontrolpanel-delta'] = n;
+ * 
+ * Remove then re-add all fcontrolpanel blocks. This way, old stuff
+ * doesn't hang around if a bunch of features get disabled.
+ */
+function fcontrolpanel_admin_toolbar($status) {
+  if(module_exists('admin') && ($status == 'enable' || $status == 'disable')) {
+    $admin_toolbar = variable_get('admin_toolbar');
+    // Check for existing FCP blocks on admin toolbar.
+    foreach($admin_toolbar['blocks'] as $key => $value) {
+      $x = substr($key, 0, 13);
+      // Remove fcontrolpanel blocks.
+      if ($x == 'fcontrolpanel') {
+        unset($admin_toolbar['blocks'][$key]);
+      }
+    }
+    // Re-count fcontrolpanel blocks (deltas).
+    // There is one block per package (feature set).
+    $packages = fcontrolpanel_get_packages();
+    $count = count($packages);
+    if($status == 'enable') {
+      for($i = 0; $i < $count; $i++) {
+        $key = 'fcontrolpanel-'. $i;
+        $admin_toolbar['blocks'][$key] = 1;
+      }
+    } else if ($status == 'disable') {
+      // Module being disables is still included in the
+      // delta count. Subtract one, otherwise Admin Toolbar
+      // keeps an extra, empty, block.
+      $count = $count - 1;
+      for($i = 0; $i < $count; $i++) {
+        $key = 'fcontrolpanel-'. $i;
+        $admin_toolbar['blocks'][$key] = 1;
+      }
+    }
+    variable_set('admin_toolbar', $admin_toolbar);
+  }
 }
 
 //--------------------------------------------------/
