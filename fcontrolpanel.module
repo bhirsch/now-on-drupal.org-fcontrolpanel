@@ -192,6 +192,7 @@ function theme_fcontrolpanel_admin_block($package) {
  * $packages[$i]['fcontrols'][$fcontrol]
  */
 function fcontrolpanel_get_packages() {
+  ctools_include('export');
   $fcontrols = ctools_export_load_object('fcontrolpanel_fcontrol');
   // Make a unique list of packages;
   foreach($fcontrols as $fcontrol) {
