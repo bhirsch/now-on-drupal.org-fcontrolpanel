@@ -118,8 +118,11 @@ function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
  */
 function theme_fcontrolpanel_admin_tabs($count) {
   if($count > 9) {
-    $path = drupal_get_path('module', 'fcontrolpanel');
-    drupal_add_css("$path/fcontrolpanel.admin.css");
+    $admin_toolbar = variable_get('admin_toolbar', NULL);
+    if($admin_toolbar['layout'] == 'horizontal') {
+      $path = drupal_get_path('module', 'fcontrolpanel');
+      drupal_add_css("$path/fcontrolpanel.admin.css");
+    }
   }  
 }
 
