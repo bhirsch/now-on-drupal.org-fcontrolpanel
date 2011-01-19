@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Define this Export UI plugin.
  */
@@ -10,7 +9,7 @@ $plugin = array(
   // Define the menu item.
   'menu' => array(
     'menu item' => 'fcontrolpanel',
-    'menu title' => 'Features Control Panel (Ctools Export UI)',
+    'menu title' => 'Features Control Panel',
     'menu description' => 'Administer Features Control Panel Controls.',
   ),
 
@@ -23,6 +22,11 @@ $plugin = array(
   'form' => array(
     'settings' => 'fcontrolpanel_ctools_export_ui_form',
     // 'submit' and 'validate' are also valid callbacks.
+  ),
+  // Use this to modify the default export UI interface.
+  'handler' => array(
+    'class' => 'fcontrolpanel_export_ui',
+    'parent' => 'ctools_export_ui',
   ),
 );
 
