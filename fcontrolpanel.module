@@ -30,8 +30,9 @@ function fcontrolpanel_menu() {
     'access arguments' => array('fcontrolpanel export permission'),
     'type' => menu_callback,
   );
+  $site_name = variable_get('site_name', NULL);
   $items['admin/fcontrolpanel'] = array(
-    'title' => 'Control Panel',
+    'title' => t('Control Panel: '. $site_name),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('fcontrolpanel_page'),
     'access arguments' => array('access features control panel'),
