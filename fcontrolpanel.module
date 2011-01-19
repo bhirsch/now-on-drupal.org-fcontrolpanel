@@ -76,15 +76,18 @@ function fcontrolpanel_theme() {
     'fcontrolpanel_admin_block' => array(
       'arguments' => array('package' => NULL),
     ),
+    'fcontrolpanel_admin_tabs' => array(
+      'arguments' => array('count' => NULL),
+    ),
   );
 }
-
 
 /**
  * Implementation of hook_block().
  */
 function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
   $packages = fcontrolpanel_get_packages();
+  theme('fcontrolpanel_admin_tabs', count($packages)); // todo temp, handle additional tabs
   if ($op == 'list') {
     foreach($packages as $n => $package) {
       $blocks[$n]['info'] = $package['package_title'];  
@@ -97,6 +100,27 @@ function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
     $block['content'] = theme('fcontrolpanel_admin_block', $package);
     return $block;
   }
+}
+
+/**
+ * Implement theme_fcontrolpanel_admin_tabs().
+ *
+ * Make Admin Toolbar taller when tabs don't fit 
+ * horizontal toolbar.
+ *
+ * 996px fixed width
+ * 9 tabs = 1 row, 30px
+ * +9 tabs =  2rows, 50px
+ *
+ * TODO This would be better handled inside admin module.
+ *      Write and submit a patch to help admin module
+ *      handle additional horizontal tabs.
+ */
+function theme_fcontrolpanel_admin_tabs($count) {
+  if($count > 9) {
+    $path = drupal_get_path('module', 'fcontrolpanel');
+    drupal_add_css("$path/fcontrolpanel.admin.css");
+  }  
 }
 
 /**
