@@ -249,7 +249,7 @@ function fcontrolpanel_admin_toolbar($status) {
   if(module_exists('admin') && ($status == 'enable' || $status == 'disable')) {
     $admin_toolbar = variable_get('admin_toolbar', NULL);
     // Check for existing FCP blocks on admin toolbar.
-    if(!empty($admin_toolbar['blocks']) {
+    if(!empty($admin_toolbar['blocks'])) {
       foreach($admin_toolbar['blocks'] as $key => $value) {
         $x = substr($key, 0, 13);
         // Remove fcontrolpanel blocks.
