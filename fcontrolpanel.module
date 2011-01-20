@@ -356,6 +356,7 @@ function fcontrolpanel_default_fcontrolpanel_fcontrol() {
  *  string, unique id for object
  */
 function fcontrolpanel_export_fcontrol(&$form_state, $name) {
+  ctools_include('export');
   $obj = fcontrolpanel_fcontrol_load($name);
   drupal_set_title(check_plain($obj->description));
   $code = fcontrolpanel_fcontrol_export($obj);
