@@ -47,7 +47,7 @@ function fcontrolpanel_menu() {
  * Implementation of hook_perm().
  */
 function fcontrolpanel_perm() {
-  return array('access features control panel', 'fcontrolpanel export');
+  return array('access features control panel', 'fcontrolpanel export', 'administer fcontrolpanel');
 }
 
 /**
