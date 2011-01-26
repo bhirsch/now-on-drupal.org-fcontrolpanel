@@ -27,7 +27,7 @@ function fcontrolpanel_menu() {
     'title' => 'export',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('fcontrolpanel_export_fcontrol', 3),
-    'access arguments' => array('fcontrolpanel export permission'),
+    'access arguments' => array('fcontrolpanel export'),
     'type' => MENU_CALLBACK,
   );
   $site_name = variable_get('site_name', NULL);
@@ -47,7 +47,7 @@ function fcontrolpanel_menu() {
  * Implementation of hook_perm().
  */
 function fcontrolpanel_perm() {
-  return array('access features control panel');
+  return array('access features control panel', 'fcontrolpanel export');
 }
 
 /**
