@@ -310,7 +310,7 @@ function fcontrolpanel_ctools_plugin_directory($module, $plugin) {
 * Tell CTools that we support the default_mymodule_presets API.
 */
 function fcontrolpanel_ctools_plugin_api($owner, $api) {
-  if ($owner == 'fcontrolpanel' && $api == 'default_fcontrolpanel_fcontol') {
+  if ($owner == 'fcontrolpanel' && $api == 'default_fcontrolpanel_fcontrol') {
     return array('version' => 1);
   }
 }
