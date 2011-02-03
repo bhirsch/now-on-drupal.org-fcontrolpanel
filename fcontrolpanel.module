@@ -210,10 +210,17 @@ function fcontrolpanel_get_packages() {
   foreach($list as $package => $package_title) {
     $packages[$i]['package_name'] = $package;
     $packages[$i]['package_title'] = $package_title;
+    $packages[$i]['disabled'] = TRUE; 
     // Organize fcontrols by package.
     foreach($fcontrols as $fcontrol) {
       if($fcontrol->package == $package_title) {
         $packages[$i]['fcontrols'][] = $fcontrol;
+        // At least one control per package needs to be
+        // enabled (not disabled) for the package to be
+        // enabled (not disabled).
+        if (!$fcontrol->disabled) {
+          $packages[$i]['disabled'] = FALSE;
+        }
       } 
     }
     // default, sort alphabetical (handle sort by weight elsewhere)

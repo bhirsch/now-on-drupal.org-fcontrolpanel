@@ -14,29 +14,31 @@ function fcontrolpanel_page() {
 
   // set up fieldsets
   foreach ($packages as $package) {
-    $package_name = $package['package_name'];
-    $package_title = $package['package_title'];
-    $form[$package_name] = array(
-      '#title' => t($package_title),
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    ); 
-    // fill fieldsets with fcontrols
-    foreach ($package['fcontrols'] as $fcontrol) {
-      $perm = ($fcontrol->permission) ? $fcontrol->permission : "access features control panel";
-      if (user_access($perm)) {
-        $txt = t($fcontrol->title);
-        $path = $fcontrol->path;
-        $query = $fcontrol->query;
-        $link = l($txt, $path, array('query' => $query));
-        $form[$package_name][$fcontrol->name] = array(
-          '#type' => 'item',
-          '#title' => $link,
-          '#value' => t($fcontrol->description),
-          '#weight' => $fcontrol->weight,
-          '#theme' => 'fcontrolpanel_fcontrol',
-        );
+    if (!$package['disabled']) {
+      $package_name = $package['package_name'];
+      $package_title = $package['package_title'];
+      $form[$package_name] = array(
+        '#title' => t($package_title),
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      ); 
+      // fill fieldsets with fcontrols
+      foreach ($package['fcontrols'] as $fcontrol) {
+        $perm = ($fcontrol->permission) ? $fcontrol->permission : "access features control panel";
+        if (user_access($perm) && ! $fcontrol->disabled) {
+          $txt = t($fcontrol->title);
+          $path = $fcontrol->path;
+          $query = $fcontrol->query;
+          $link = l($txt, $path, array('query' => $query));
+          $form[$package_name][$fcontrol->name] = array(
+            '#type' => 'item',
+            '#title' => $link,
+            '#value' => t($fcontrol->description),
+            '#weight' => $fcontrol->weight,
+            '#theme' => 'fcontrolpanel_fcontrol',
+          );
+        }
       }
     }
   }
