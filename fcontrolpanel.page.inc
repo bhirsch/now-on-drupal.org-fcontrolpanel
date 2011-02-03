@@ -24,19 +24,19 @@ function fcontrolpanel_page() {
     ); 
     // fill fieldsets with fcontrols
     foreach ($package['fcontrols'] as $fcontrol) {
-      $txt = t($fcontrol->title);
-      $path = $fcontrol->path;
-      $query = $fcontrol->query;
-      $link = l($txt, $path, array('query' => $query));
-      $form[$package_name][$fcontrol->name] = array(
-        '#type' => 'item',
-        '#title' => $link,
-        '#value' => t($fcontrol->description),
-        '#weight' => $fcontrol->weight,
-        '#theme' => 'fcontrolpanel_fcontrol',
-      );
-      if ($fcontrol->permission) {
-        $form[$package][$fcontrol->name]['#access'] = user_access($fcontrol->permission);
+      $perm = ($fcontrol->permission) ? $fcontrol->permission : "access features control panel";
+      if (user_access($perm)) {
+        $txt = t($fcontrol->title);
+        $path = $fcontrol->path;
+        $query = $fcontrol->query;
+        $link = l($txt, $path, array('query' => $query));
+        $form[$package_name][$fcontrol->name] = array(
+          '#type' => 'item',
+          '#title' => $link,
+          '#value' => t($fcontrol->description),
+          '#weight' => $fcontrol->weight,
+          '#theme' => 'fcontrolpanel_fcontrol',
+        );
       }
     }
   }
