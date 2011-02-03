@@ -397,10 +397,9 @@ function fcontrolpanel_fcontrol_export($obj, $indent = '') {
 /**
  * Save a single myobj.
  */
-// TODO 
 function fcontrolpanel_fcontrol_save(&$myobj) {
-    $update = (isset($myobj->oid) && is_numeric($myobj->oid)) ? array('oid') : array();
-      return drupal_write_record('myobj', $myobj, $update);
+    $update = (isset($myobj->fcid) && is_numeric($myobj->fcid)) ? array('fcid') : array();
+      return drupal_write_record('fcontrolpanel_fcontrol', $myobj, $update);
 }
 
 
