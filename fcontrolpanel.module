@@ -330,13 +330,12 @@ function fcontrolpanel_ctools_plugin_api($owner, $api) {
  * Note: This function name is defined in .install file,
  *   'default hook' => 'default_mymodule_myobj',  // Function hook name.
  */ 
-// TODO figure out why this doesn't seem to work.
 function fcontrolpanel_default_fcontrolpanel_fcontrol() {
   $export = array();
 
   $export = array();
   $fcontrol = new stdClass;
-  $fcontrol->disabled = FALSE; /* Edit this to true to make a default fcontrol disabled initially */
+  $fcontrol->disabled = TRUE; /* Edit this to true to make a default fcontrol disabled initially */
   $fcontrol->api_version = 1;
   $fcontrol->package = 'example';
   $fcontrol->title = 'This is an example';
