@@ -91,13 +91,14 @@ function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
   theme('fcontrolpanel_admin_tabs', count($packages)); // todo temp, handle additional tabs
   if ($op == 'list') {
     foreach($packages as $n => $package) {
-      $blocks[$n]['info'] = $package['package_title'];  
-      $blocks[$n]['admin'] = TRUE;
+      $title = check_plain($package['package_title']);
+      $blocks[$n]['info'] = ($package['disabled']) ? $title . t(' DISABLED') : $title; 
+      $blocks[$n]['admin'] = ($package['disabled']) ? NULL : TRUE;
     }  
     return $blocks;
-  } else if ($op == 'view') {
+  } else if ($op == 'view' && !$packages[$delta]['disabled']) { // Ignore disabled controls.
     $package = $packages[$delta];
-    $block['subject'] = t($package['package_title']);
+    $block['subject'] = t(check_plain($package['package_title']));
     $block['content'] = theme('fcontrolpanel_admin_block', $package);
     return $block;
   }
