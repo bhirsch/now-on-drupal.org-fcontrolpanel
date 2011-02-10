@@ -1,7 +1,6 @@
 <?php
 /**
- * @file
- *  
+ * @file fcontrolpanel.module
  */
  
 //--------------------------------//
@@ -13,7 +12,7 @@
  */
 function fcontrolpanel_help($path, $arg) {
   if ($path == 'admin/help#fcontrolpanel') {
-    $txt = 'Features Control Panel provides a.... [FINISH HELP TEXT] '; // TODO
+    $txt = 'Features Control Panel'; 
     $output = t($txt);
     return $output;
   }
@@ -114,7 +113,7 @@ function fcontrolpanel_block($op = 'list', $delta = 0, $edit = array()) {
  * 9 tabs = 1 row, 30px
  * +9 tabs =  2rows, 50px
  *
- * TODO This would be better handled inside admin module.
+ * @todo This would be better handled inside admin module.
  *      Write and submit a patch to help admin module
  *      handle additional horizontal tabs.
  */
@@ -140,7 +139,7 @@ function theme_fcontrolpanel_admin_tabs($count) {
  * @return $output
  *  string, HTML for block content.
  *
- * todo: Consider making packages into real menus.
+ * @todo: Consider making packages into real menus.
  */
 function theme_fcontrolpanel_admin_block($package) {
   $output = '';
@@ -408,34 +407,3 @@ function fcontrolpanel_fcontrol_save(&$myobj) {
     $update = (isset($myobj->fcid) && is_numeric($myobj->fcid)) ? array('fcid') : array();
       return drupal_write_record('fcontrolpanel_fcontrol', $myobj, $update);
 }
-
-
-
-//-------------------------------------------------/
-// Features hooks                                  /
-//-------------------------------------------------/
-/**
- * Implementation of hook_features_api().
- */
-// TODO 
-
-/**
- * Implementation of hook_features_export().
- */
-// TODO 
-
-/**
- * Implementation of hook_features_export_render().
- */
-// TODO 
-
-/**
- * Implementation of hook_features_export_options().
- */
-// TODO 
-
-/**
- * Implementation of hook_features_revert().
- */
-// TODO 
-
