@@ -8,6 +8,7 @@
  * Callback for path admin/fcontrolpanel.
  */
 function fcontrolpanel_page() {
+  ctools_include('export');
   $fcontrols = ctools_export_load_object('fcontrolpanel_fcontrol');
 
   $packages = fcontrolpanel_get_packages();

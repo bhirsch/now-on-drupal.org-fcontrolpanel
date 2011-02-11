@@ -1,6 +1,9 @@
 Control Panel 
 --------------
 
+Recomended:
+Admin module
+
 This is an end-user oriented admin page.
 
 
