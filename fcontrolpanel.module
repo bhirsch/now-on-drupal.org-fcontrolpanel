@@ -31,12 +31,12 @@ function fcontrolpanel_menu() {
   );
   $site_name = variable_get('site_name', NULL);
   $items['admin/fcontrolpanel'] = array(
-    'title' => t('Control Panel: ' . $site_name),
+    'title' => t('Control Panel'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('fcontrolpanel_page'),
     'access arguments' => array('access features control panel'),
     'file' => 'fcontrolpanel.page.inc',
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
   );
 
   return $items;
