@@ -176,7 +176,7 @@ function theme_fcontrolpanel_admin_block($variables) {
     // Info for building list items:
     $txt = t($fcontrol->title);
     $path = $fcontrol->path;
-    $query = $fcontrol->query;
+    $query = _fcontrolpanel_query($fcontrol);
     $perm = ($fcontrol->permission) ? $fcontrol->permission : 'access features control panel';
     // Info for sorting list items:
     $weight = $fcontrol->weight;
@@ -184,7 +184,7 @@ function theme_fcontrolpanel_admin_block($variables) {
     $key = $weight . '-' . $name;
     //$desc = t($fcontrol->description);
     if (user_access($perm)) {
-      $link = l($txt, $path, array('query' => $query));
+      $link = ($query) ? l($txt, $path, array('query' => $query)) : l($txt, $path);
       //$description = '<span class="menu-description"><span class="icon"></span>'. $desc .'</span>';
       //$output .= '<li class="leaf">'. $link . $description .'</li>';
       //$output .= '<li class="leaf">'. $link .'</li>';
@@ -206,6 +206,34 @@ function theme_fcontrolpanel_admin_block($variables) {
 //----------------------------------------------//
 // fcontrolpanel                                //
 //----------------------------------------------//
+
+/**
+ * Turn a simple query string into an array.
+ * 
+ * @param $fcontrol
+ *  object, fcontrol
+ *
+ * @return $query
+ *  array, $query = array( 'x' => 'y', 'a' => 'b' )
+ */
+function _fcontrolpanel_query($fcontrol) {
+  if ($query = $fcontrol->query) {
+    // Process query string, break key/value pairs like this, 'x=y&a=b'
+    // into an array like this, $query = array( 'x' => 'y', 'a' => 'b' ) 
+    $query = array();
+    $pairs = explode('&', $fcontrol->query);
+    foreach ($pairs as $pair) {
+      $q = explode('=', $pair);
+      $key = check_plain($q[0]);
+      $value = check_plain($q[1]);
+      $query[$key] = $value;
+    }
+    return $query; 
+  } 
+  else {
+    return FALSE;  
+  }
+}
 
 /**
  * @return $packages

@@ -31,8 +31,8 @@ function fcontrolpanel_page($form, &$form_state) {
         //if (user_access($perm) && ! $fcontrol->disabled) {
           $txt = t($fcontrol->title);
           $path = $fcontrol->path;
-          $query = $fcontrol->query;
-          $link = l($txt, $path, array('query' => $query));
+          $query = _fcontrolpanel_query($fcontrol);
+          $link = ($query) ? l($txt, $path, array('query' => $query)) : l($txt, $path);
           $form[$package_name][$fcontrol->name] = array(
             '#type' => 'item',
             '#title' => $link,
