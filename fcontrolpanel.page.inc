@@ -58,14 +58,10 @@ function theme_fcontrolpanel_fcontrol($variables) {
   $path = drupal_get_path('module', 'fcontrolpanel');
   drupal_add_css("$path/fcontrolpanel.css");
 
-  // @TODO call drupal_render() here? 
-  // e.g. see system_date_time_settings here:
-  //   http://api.drupal.org/api/drupal/modules--system--system.api.php/function/hook_theme/7
-  //   Implementation here: 
-  //   system.admin.inc line 2029, theme_system_date_time_settings($variables)
   $output = '';
   $output .= '<div class="fcontrol-title">' . $element['#title'] . '</div>';
   $output .= '<div class="fcontrol-description">' . $element['#value'] . '</div>';
   $output = '<div class="fcontrol">' . $output . '</div>';
+
   return $output;
 }

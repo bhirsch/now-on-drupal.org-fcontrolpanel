@@ -63,12 +63,18 @@ function fcontrolpanel_permission() {
 }
 
 /**
+ * Implements hook_modules_enabled().
+ */
+function fcontrolpanel_modules_enabled($modules) {
+  dsm($modules);
+// CONTINUE HERE
+// this returns an array of module names. load info files. check for fcontrolpanel_fcontrol objects. then adjust admin toolbar accordingly.
+}
+
+/**
  * Implements hook_form_alter().
  */
 function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
-  //if ($form_id == 'ctools_export_ui_list_form') {
-  //  dsm($form);
-  //}
   if ($form_id == 'user_login') {
     // Access control and $form_state['#redirect'] = 'admin/fcontrolpanel' doesn't work
     // here because the user's status changes from anonymous to [role]
@@ -84,7 +90,6 @@ function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
 function fcontrolpanel_theme() {
   return array(
     'fcontrolpanel_fcontrol' => array(
-      //'variables' => array('element' => NULL),
       'render element' => 'element',
     ),
     'fcontrolpanel_admin_block' => array(
