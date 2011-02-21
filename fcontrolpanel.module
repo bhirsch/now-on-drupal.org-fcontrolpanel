@@ -84,6 +84,7 @@ function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
 function fcontrolpanel_theme() {
   return array(
     'fcontrolpanel_fcontrol' => array(
+      //'variables' => array('element' => NULL),
       'render element' => 'element',
     ),
     'fcontrolpanel_admin_block' => array(

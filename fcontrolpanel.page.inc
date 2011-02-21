@@ -38,6 +38,7 @@ function fcontrolpanel_page($form, &$form_state) {
             '#title' => $link,
             '#value' => t($fcontrol->description),
             '#weight' => $fcontrol->weight,
+            '#title_display' => 'invisible',
             '#theme' => 'fcontrolpanel_fcontrol',
           );
         }
