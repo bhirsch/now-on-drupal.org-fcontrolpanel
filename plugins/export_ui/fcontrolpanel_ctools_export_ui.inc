@@ -3,16 +3,14 @@
  * Define this Export UI plugin.
  */
 $plugin = array(
-  'schema' => 'fcontrolpanel_fcontrol',  // As defined in hook_schema(), mymodule_myobj.
-  'access' => 'administer fcontrolpanel',  // Define a permission users must have to access these pages.
-
+  'schema' => 'fcontrolpanel_fcontrol', // As defined in hook_schema(), mymodule_myobj.
+  'access' => 'administer fcontrolpanel', // Define a permission users must have to access these pages.
   // Define the menu item.
   'menu' => array(
     'menu item' => 'fcontrolpanel',
     'menu title' => 'Features Control Panel',
     'menu description' => 'Administer Features Control Panel Controls.',
   ),
-
   // Define user interface texts.
   'title singular' => t('control'),
   'title plural' => t('controls'),
@@ -31,21 +29,21 @@ $plugin = array(
 );
 
 /**
-* Define the preset add/edit form.
-*/
+ * Define the preset add/edit form.
+ */
 function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
   $fcontrol = $form_state['item'];
 
   // fcontrolpanel's configuration interface.
   /* Apparently Ctools includes this field automatically on its own.
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Machine Name'),
-    '#description' => t('lowercase, no spaces or punctuation'),
-    '#default_value' => $fcontrol->name,
-    '#required' => true,
-  );
-  // */
+   $form['name'] = array(
+   '#type' => 'textfield',
+   '#title' => t('Machine Name'),
+   '#description' => t('lowercase, no spaces or punctuation'),
+   '#default_value' => $fcontrol->name,
+   '#required' => true,
+   );
+   // */
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
@@ -57,7 +55,7 @@ function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Feature Set (Package)'),
     '#description' => t('Determine which feature set the control will '
-                       .'be included in.'),
+                       . 'be included in.'),
     '#default_value' => $fcontrol->package,
     '#required' => true,
   );
@@ -79,41 +77,41 @@ function fcontrolpanel_ctools_export_ui_form(&$form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Query'),
     '#description' => t('Include this query string in the URL, e.g. x=y&a=b '
-                       .'will be added to the URL like this: '
-                       .'http://example.com/admin/example?x=y&a=b'),
+                       . 'will be added to the URL like this: '
+                       . 'http://example.com/admin/example?x=y&a=b'),
     '#default_value' => $fcontrol->query,
     '#required' => false,
   );
   /*  // TODO Figure out how to display this stuff on admin/fcontrolpanel page
-  $form['video_title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Instructional Video Title'),
-    '#description' => t('Title of instructional video'),
-    '#default_value' => $fcontrol->video_title,
-    '#required' => false,
-  );
-  $form['video'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Video'),
-    '#description' => t('e.g. <embed>HTML for YouTube, Vimeo, etc., video goes here</embed>'),
-    '#default_value' => $fcontrol->video,
-    '#required' => false,
-  );
-  $form['instructions_title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Instructions Title'),
-    '#description' => t('Written instructions'),
-    '#default_value' => $fcontrol->video_title,
-    '#required' => false,
-  );
-  $form['instructions'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Instructions'),
-    '#description' => t('Include written instructions for the end-user here'),
-    '#default_value' => $fcontrol->video,
-    '#required' => false,
-  );
-  // */
+   $form['video_title'] = array(
+   '#type' => 'textfield',
+   '#title' => t('Instructional Video Title'),
+   '#description' => t('Title of instructional video'),
+   '#default_value' => $fcontrol->video_title,
+   '#required' => false,
+   );
+   $form['video'] = array(
+   '#type' => 'textarea',
+   '#title' => t('Video'),
+   '#description' => t('e.g. <embed>HTML for YouTube, Vimeo, etc., video goes here</embed>'),
+   '#default_value' => $fcontrol->video,
+   '#required' => false,
+   );
+   $form['instructions_title'] = array(
+   '#type' => 'textfield',
+   '#title' => t('Instructions Title'),
+   '#description' => t('Written instructions'),
+   '#default_value' => $fcontrol->video_title,
+   '#required' => false,
+   );
+   $form['instructions'] = array(
+   '#type' => 'textarea',
+   '#title' => t('Instructions'),
+   '#description' => t('Include written instructions for the end-user here'),
+   '#default_value' => $fcontrol->video,
+   '#required' => false,
+   );
+   // */
   $form['permission'] = array(
     '#type' => 'textfield',
     '#title' => t('Required Permission'),

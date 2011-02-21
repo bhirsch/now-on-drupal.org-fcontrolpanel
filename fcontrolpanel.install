@@ -1,44 +1,31 @@
-<?php 
+<?php
+
 /**
  * @file
  *  Install module.
  */
 
 /**
- * Implementation of hook_install().
- */
-function fcontrolpanel_install() {
-  drupal_install_schema('fcontrolpanel');
-}
-
-/**
- * Implementation of hook_uninstall().
- */
-function fcontrolpanel_uninstall() {
-  drupal_uninstall_schema('fcontrolpanel');
-}
-
-/**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function fcontrolpanel_schema() {
   $schema['fcontrolpanel_fcontrol'] = array(
-    'description' => t('Table storing fcontrol (myobj), definitions.'),
+    'description' => 'Table storing fcontrol (myobj), definitions.',
     'export' => array(
       'key' => 'name',
       'key name' => 'Name',
       'primary key' => 'fcid',
       'identifier' => 'fcontrol', // Exports will be as $fcontrol
-      'default hook' => 'default_fcontrolpanel_fcontrol',  // Function hook name.
+      'default hook' => 'default_fcontrolpanel_fcontrol', // Function hook name.
       'api' => array(
         'owner' => 'fcontrolpanel',
-        'api' => 'default_fcontrolpanel_fcontrol',  // Base name for api include files.
+        'api' => 'default_fcontrolpanel_fcontrol', // Base name for api include files.
         'minimum_version' => 1,
         'current_version' => 1,
       ),
     ),
     'fields' => array(
-      // fcid 
+      // fcid
       'fcid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
@@ -48,77 +35,74 @@ function fcontrolpanel_schema() {
       ),
       // package (feature set)
       'package' => array(
-        'type' => 'varchar',  
-        'length' => 64,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'Feature package name from myfeature.info file.',
       ),
       // title (human)
       'title' => array(
-        'type' => 'varchar',  
-        'length' => 64,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'Human readable title.',
       ),
       // name (machine, unique id)
       'name' => array(
-        'type' => 'varchar',  
-        'length' => 64,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'Unique ID for this object. Used to identify it programmatically.',
       ),
       // path
       'path' => array(
-        'type' => 'varchar',  
-        'length' => 255,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'Drupal path/to/control',
       ),
       // query string
       'query' => array(
-        'type' => 'varchar',  
-        'length' => 255,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'Query string in link to control. E.g. type=press_release&status=All&tid=All&tid_1=All',
       ),
       // description
       'description' => array(
-        'type' => 'text',  
-        'not null' => TRUE, 
-        'default' => '',
+        'type' => 'text',
+        'not null' => TRUE,
         'desctiption' => 'Brief description',
       ),
       // video (how-to video, embed html)
       'video_title' => array(
-        'type' => 'varchar',  
-        'length' => 64,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'To be used for link to video',
       ),
       'video' => array(
-        'type' => 'text',  
-        'not null' => TRUE, 
-        'default' => '',
+        'type' => 'text',
+        'not null' => TRUE,
         'description' => '<embed> HTML for how-to video',
       ),
       // instructions
       'instructions_title' => array(
-        'type' => 'varchar',  
-        'length' => 64,      
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
         'default' => '',
         'description' => 'Text used for link to instructions',
       ),
       'instructions' => array(
-        'type' => 'text',  
-        'not null' => TRUE, 
-        'default' => '',
+        'type' => 'text',
+        'not null' => TRUE,
         'description' => 'Written instructions',
       ),
       // required permission
@@ -129,7 +113,7 @@ function fcontrolpanel_schema() {
         'default' => '',
         'description' => 'Permissions required to access this control.',
       ),
-      // fcontrol weight 
+      // fcontrol weight
       'weight' => array(
         'type' => 'int',
         'unsigned' => FALSE,
@@ -149,10 +133,8 @@ function fcontrolpanel_schema() {
 
 /**
  * Implementation of hook_update_N.
- * 
- * Add permission field.
  */
 /*
-function fcontrolpanel_update_6001() {
-}
-// */
+ function fcontrolpanel_update_6001() {
+ }
+ // */

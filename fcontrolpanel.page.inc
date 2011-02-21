@@ -7,7 +7,7 @@
 /**
  * Callback for path admin/fcontrolpanel.
  */
-function fcontrolpanel_page() {
+function fcontrolpanel_page($form, &$form_state) {
   ctools_include('export');
   $fcontrols = ctools_export_load_object('fcontrolpanel_fcontrol');
 
@@ -23,7 +23,7 @@ function fcontrolpanel_page() {
         '#type' => 'fieldset',
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
-      ); 
+      );
       // fill fieldsets with fcontrols
       foreach ($package['fcontrols'] as $fcontrol) {
         $perm = ($fcontrol->permission) ? $fcontrol->permission : "access features control panel";
@@ -45,19 +45,25 @@ function fcontrolpanel_page() {
   }
   // TODO Video
   // TODO Instructions
-  return $form; 
+  return $form;
 }
 
 /**
  * Implementation of theme function for form elements.
  */
-function theme_fcontrolpanel_fcontrol($element) {
+function theme_fcontrolpanel_fcontrol($variables) {
+  $element = $variables['element'];
   $path = drupal_get_path('module', 'fcontrolpanel');
   drupal_add_css("$path/fcontrolpanel.css");
 
+  // @TODO call drupal_render() here? 
+  // e.g. see system_date_time_settings here:
+  //   http://api.drupal.org/api/drupal/modules--system--system.api.php/function/hook_theme/7
+  //   Implementation here: 
+  //   system.admin.inc line 2029, theme_system_date_time_settings($variables)
   $output = '';
-  $output .= '<div class="fcontrol-title">'. $element['#title'] .'</div>';
-  $output .= '<div class="fcontrol-description">'. $element['#value'] .'</div>';
-  $output = '<div class="fcontrol">'. $output .'</div>'; 
+  $output .= '<div class="fcontrol-title">' . $element['#title'] . '</div>';
+  $output .= '<div class="fcontrol-description">' . $element['#value'] . '</div>';
+  $output = '<div class="fcontrol">' . $output . '</div>';
   return $output;
 }
