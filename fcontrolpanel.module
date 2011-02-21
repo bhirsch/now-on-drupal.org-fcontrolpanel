@@ -177,9 +177,9 @@ function theme_fcontrolpanel_admin_block($variables) {
     $txt = t($fcontrol->title);
     $path = $fcontrol->path;
     $query = _fcontrolpanel_query($fcontrol);
-    $perm = ($fcontrol->permission) ? $fcontrol->permission : 'access features control panel';
+    $perm = (property_exists($fcontrol, 'permission') && $fcontrol->permission != NULL) ? $fcontrol->permission : 'access features control panel';
     // Info for sorting list items:
-    $weight = $fcontrol->weight;
+    $weight = (property_exists($fcontrol, 'weight') && $fcontrol->weight != NULL) ? $fcontrol->weight : 0;
     $name = $fcontrol->name;
     $key = $weight . '-' . $name;
     //$desc = t($fcontrol->description);
