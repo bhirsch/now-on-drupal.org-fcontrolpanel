@@ -27,7 +27,8 @@ function fcontrolpanel_page($form, &$form_state) {
       // fill fieldsets with fcontrols
       foreach ($package['fcontrols'] as $fcontrol) {
         $perm = ($fcontrol->permission) ? $fcontrol->permission : "access features control panel";
-        if (user_access($perm) && ! $fcontrol->disabled) {
+        if (user_access($perm) && !property_exists($fcontrol, 'disabled')) {
+        //if (user_access($perm) && ! $fcontrol->disabled) {
           $txt = t($fcontrol->title);
           $path = $fcontrol->path;
           $query = $fcontrol->query;

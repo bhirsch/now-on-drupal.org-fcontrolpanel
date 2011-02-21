@@ -7,6 +7,7 @@ $plugin = array(
   'access' => 'administer fcontrolpanel', // Define a permission users must have to access these pages.
   // Define the menu item.
   'menu' => array(
+    'menu prefix' => 'admin/structure',
     'menu item' => 'fcontrolpanel',
     'menu title' => 'Features Control Panel',
     'menu description' => 'Administer Features Control Panel Controls.',

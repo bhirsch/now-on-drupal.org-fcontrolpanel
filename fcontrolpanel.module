@@ -241,8 +241,11 @@ function fcontrolpanel_get_packages() {
         // At least one control per package needs to be
         // enabled (not disabled) for the package to be
         // enabled (not disabled).
-        if (!$fcontrol->disabled) {
+        if (!property_exists($fcontrol, 'disabled')) {
+          // This property is created by Ctools and set to TRUE when disabled.
+          //if (!$fcontrol->disabled) { 
           $packages[$i]['disabled'] = FALSE;
+          //}
         }
       }
     }

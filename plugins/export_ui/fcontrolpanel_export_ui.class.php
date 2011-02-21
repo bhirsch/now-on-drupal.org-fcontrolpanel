@@ -23,38 +23,80 @@ class fcontrolpanel_export_ui extends ctools_export_ui {
   }
 
   function list_render(&$form_state) {
-    return theme('table', $this->list_table_header(), $this->rows, array('class' => 'fcontrolpanel-admin', 'id' => 'ctools-export-ui-list-items'));
+    $table = array(
+      'header' => $this->list_table_header(),
+      'rows' => $this->rows, 
+      'attributes' => array(
+        'class' => array('fcontrolpanel-admin'),
+        'id' => 'ctools-export-ui-list-items',
+      ),
+    );
+    return theme('table', $table);
   }
 
   function list_build_row($item, &$form_state, $operations) {
     $name = $item->name;
-
-    // Add a row for packages (feature sets, "tags" in context module).
-    $package = !empty($item->package) ? $item->package : t('< No Package / Feature Set >');
+    // Add a row for packages.
+    $package = !empty($item->package) ? $item->package : t('< Unpackageged >');
     if (!isset($this->rows[$package])) {
       $this->rows[$package]['data'] = array();
-      $this->rows[$package]['data'][] = array('data' => check_plain($package), 'colspan' => 3, 'class' => 'package');
+      $this->rows[$package]['data'][] = array('data' => check_plain($package), 'colspan' => 3, 'class' => array('package'));
       $this->sorts["{$package}"] = $package;
     }
 
     // Build row for each context item.
     $this->rows["{$package}:{$name}"]['data'] = array();
-    $this->rows["{$package}:{$name}"]['class'] = !empty($item->disabled) ? 'ctools-export-ui-disabled' : 'ctools-export-ui-enabled';
+    $this->rows["{$package}:{$name}"]['class'] = !empty($item->disabled) ? array('ctools-export-ui-disabled') : array('ctools-export-ui-enabled');
     $this->rows["{$package}:{$name}"]['data'][] = array(
       'data' => check_plain($name) . "<div class='description'>" . check_plain($item->description) . "</div>",
-      'class' => 'ctools-export-ui-name'
+      'class' => array('ctools-export-ui-name')
     );
     $this->rows["{$package}:{$name}"]['data'][] = array(
       'data' => check_plain($item->type),
-      'class' => 'ctools-export-ui-storage'
+      'class' => array('ctools-export-ui-storage')
     );
     $this->rows["{$package}:{$name}"]['data'][] = array(
-      'data' => theme('links', $operations, array('class' => 'links inline')),
-      'class' => 'ctools-export-ui-operations'
+      'data' => theme('links', array(
+        'links' => $operations,
+        'attributes' => array('class' => array('links inline'))
+      )),
+      'class' => array('ctools-export-ui-operations'),
     );
 
     // Sort by package, name.
     $this->sorts["{$package}:{$name}"] = $package . $name;
+    /*
+    // Add a row for packages (feature sets, "packages" in context module).
+    $package = !empty($item->package) ? $item->package : t('< No Package / Feature Set >');
+    if (!isset($this->rows[$package])) {
+      $this->rows[$package]['data'] = array();
+      $this->rows[$package]['data'][] = array('data' => check_plain($package), 'colspan' => 3, 'class' => array('package');
+      $this->sorts["{$package}"] = $package;
+    }
+
+    // Build row for each context item.
+    $this->rows["{$package}:{$name}"]['data'] = array();
+    $this->rows["{$package}:{$name}"]['class'] = !empty($item->disabled) ? array('ctools-export-ui-disabled') : array('ctools-export-ui-enabled');
+    $this->rows["{$package}:{$name}"]['data'][] = array(
+      'data' => check_plain($name) . "<div class='description'>" . check_plain($item->description) . "</div>",
+      'class' => array('ctools-export-ui-name')
+    );
+    $this->rows["{$package}:{$name}"]['data'][] = array(
+      'data' => check_plain($item->type),
+      'class' => array('ctools-export-ui-storage')
+    );
+    $this->rows["{$package}:{$name}"]['data'][] = array(
+      'data' => theme('links', array(
+        'links' => $operations,
+        'attributes' => array('class' => array('links inline'))
+      )),
+      'class' => array('ctools-export-ui-operations'),
+    );
+
+    // Sort by package, name.
+    $this->sorts["{$package}:{$name}"] = $package . $name;
+// */
+    // */
   }
   
   /**
