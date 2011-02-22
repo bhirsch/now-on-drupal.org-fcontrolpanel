@@ -64,11 +64,79 @@ function fcontrolpanel_permission() {
 
 /**
  * Implements hook_modules_enabled().
+ * 
+ * Check for fcontrol objects. If there are any, and Admin Toolbar 
+ * is installed, add them to the Admin Toolbar.
  */
 function fcontrolpanel_modules_enabled($modules) {
-  dsm($modules);
-// CONTINUE HERE
-// this returns an array of module names. load info files. check for fcontrolpanel_fcontrol objects. then adjust admin toolbar accordingly.
+  foreach ($modules as $module) {
+    $path = drupal_get_path('module', $module) . "/$module.info";
+    $info = drupal_parse_info_file($path);
+    if ($fcontrols = $info['features']['fcontrolpanel_fcontrol']) {
+      if (module_exists('admin') && variable_get('fcontrolpanel_admin', TRUE)) {
+        foreach ($fcontrols as $fcontrol_name) {
+          $fcontrol = fcontrolpanel_fcontrol_load($fcontrol_name);
+          $name = fcontrolpanel_package_name($fcontrol->package);
+          // Check if block is already on admin toolbar.
+          $block_name = 'fcontrolpanel-'. $name;
+          $admin_toolbar = variable_get('admin_toolbar', NULL);
+          if (!$result = array_key_exists($block_name, $admin_toolbar['blocks'])) {
+            // Add block to Admin Toolbar.
+            $admin_toolbar['blocks'][$block_name] = 1;
+            variable_set('admin_toolbar', $admin_toolbar);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_disabled().
+ * 
+ * Check for fcontrol objects. If there are any, remove them 
+ * from the Admin Toolbar.
+ */
+function fcontrolpanel_modules_disabled($modules) {
+  // Figure out if disabled module has fcontrols.
+  foreach ($modules as $module) {
+    $path = drupal_get_path('module', $module) . "/$module.info";
+    $info = drupal_parse_info_file($path);
+    if ($fcontrols = $info['features']['fcontrolpanel_fcontrol']) {
+      if (module_exists('admin')) {
+        foreach ($fcontrols as $fcontrol_name) {
+
+          // Identify any orphaned fcontrolpanel blocks in Admin Toolbar to remove.
+          $packages = fcontrolpanel_get_packages();
+          $package_names = array();
+          foreach ($packages as $package) {
+            $package_names[] = $package['package_name'];  
+          } 
+          $admin_toolbar = variable_get('admin_toolbar', NULL);
+          $remove = array();
+          foreach ($admin_toolbar['blocks'] as $block_name => $value) {
+            foreach ($admin_toolbar['blocks'] as $block_name => $value) {
+              if (substr($block_name, 0, 14) == 'fcontrolpanel-') {
+                $name = substr($block_name, 14);
+                if (!in_array($name, $package_names)) { // It's an orphan.
+                  $remove[] = $block_name; 
+                }
+              }
+            }
+          }
+
+          // Remove orphans.
+          if ($remove) {
+            foreach ($remove as $orphan) {
+              unset($admin_toolbar['blocks'][$orphan]); 
+            }
+            variable_set('admin_toolbar', $admin_toolbar);
+          }
+
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -110,9 +178,10 @@ function fcontrolpanel_block_info() {
   theme('fcontrolpanel_admin_tabs', array('count' => count($packages))); //todo temp, handle additional tabs
   foreach ($packages as $n => $package) {
     $title = check_plain($package['package_title']);
-    $blocks[$n]['info'] = ($package['disabled']) ? $title . t(' DISABLED') : $title;
-    $blocks[$n]['admin'] = ($package['disabled']) ? NULL : TRUE;
-    $blocks[$n]['cache'] = DRUPAL_CACHE_PER_ROLE;
+    $name = check_plain($package['package_name']);
+    $blocks[$name]['info'] = ($package['disabled']) ? $title . t(' DISABLED') : $title;
+    $blocks[$name]['admin'] = ($package['disabled']) ? NULL : TRUE;
+    $blocks[$name]['cache'] = DRUPAL_CACHE_PER_ROLE;
   }
   return $blocks;
 }
@@ -241,20 +310,33 @@ function _fcontrolpanel_query($fcontrol) {
 }
 
 /**
+ * @param $package_title
+ *  string, package name
+ * 
+ * @return $name
+ *  string, machine name
+ */
+function fcontrolpanel_package_name($package_title) {
+  $package = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $package_title));
+  $package = check_plain($package);
+  return $package;
+}
+
+/**
  * @return $packages
  *  array, fcontrols organized by package
  *
- * $packages[$i]['package_name'] = package name
- * $packages[$i]['package_title'] = $package_title;
- * $packages[$i]['fcontrols'][$fcontrol]
+ * $packages[$package_name]['package_name'] = package name
+ * $packages[$package_name]['package_title'] = $package_title;
+ * $packages[$package_name]['fcontrols'][$fcontrol]
  */
 function fcontrolpanel_get_packages() {
   ctools_include('export');
   $fcontrols = ctools_export_load_object('fcontrolpanel_fcontrol');
   // Make a unique list of packages;
   foreach ($fcontrols as $fcontrol) {
-    $package_title = $fcontrol->package;
-    $package = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $package_title));
+    $package_title = check_plain($fcontrol->package);
+    $package = fcontrolpanel_package_name($package_title);
     $list[$package] = $package_title;
   }
   // Sort package list in alphabetical order by $package_title.
@@ -263,15 +345,14 @@ function fcontrolpanel_get_packages() {
   asort($list);
   // Number packages.
   $packages = array();
-  $i = 0;
   foreach ($list as $package => $package_title) {
-    $packages[$i]['package_name'] = $package;
-    $packages[$i]['package_title'] = $package_title;
-    $packages[$i]['disabled'] = TRUE;
+    $packages[$package]['package_name'] = $package;
+    $packages[$package]['package_title'] = $package_title;
+    $packages[$package]['disabled'] = TRUE;
     // Organize fcontrols by package.
     foreach ($fcontrols as $fcontrol) {
       if ($fcontrol->package == $package_title) {
-        $packages[$i]['fcontrols'][] = $fcontrol;
+        $packages[$package]['fcontrols'][] = $fcontrol;
         // At least one control per package needs to be
         // enabled (not disabled) for the package to be
         // enabled (not disabled).
@@ -279,18 +360,17 @@ function fcontrolpanel_get_packages() {
           // This property is created and set by Ctools.
           // If the control is stored in database and is enabled, the property
           // doesn't exist and throws an error.
-          $packages[$i]['disabled'] = FALSE;
+          $packages[$package]['disabled'] = FALSE;
         }
         else { // $fcontrol->disabled does exist
           if (!$fcontrol->disabled) { 
-            $packages[$i]['disabled'] = FALSE;
+            $packages[$package]['disabled'] = FALSE;
           }
         }
       }
     }
     // default, sort alphabetical (handle sort by weight elsewhere)
-    sort($packages[$i]['fcontrols']);
-    $i++;
+    sort($packages[$package]['fcontrols']);
   }
 
   return $packages;
