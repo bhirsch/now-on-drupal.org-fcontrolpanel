@@ -143,6 +143,8 @@ function fcontrolpanel_modules_disabled($modules) {
  * Implements hook_form_alter().
  */
 function fcontrolpanel_form_alter(&$form, &$form_state, $form_id) {
+  // @todo goto doesn't work on user_login_block
+  //if ($form_id == 'user_login' || $form_id == 'user_login_block') {
   if ($form_id == 'user_login') {
     // Access control and $form_state['#redirect'] = 'admin/fcontrolpanel' doesn't work
     // here because the user's status changes from anonymous to [role]
