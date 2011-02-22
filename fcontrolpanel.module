@@ -64,8 +64,8 @@ function fcontrolpanel_permission() {
 
 /**
  * Implements hook_modules_enabled().
- * 
- * Check for fcontrol objects. If there are any, and Admin Toolbar 
+ *
+ * Check for fcontrol objects. If there are any, and Admin Toolbar
  * is installed, add them to the Admin Toolbar.
  */
 function fcontrolpanel_modules_enabled($modules) {
@@ -78,7 +78,7 @@ function fcontrolpanel_modules_enabled($modules) {
           $fcontrol = fcontrolpanel_fcontrol_load($fcontrol_name);
           $name = fcontrolpanel_package_name($fcontrol->package);
           // Check if block is already on admin toolbar.
-          $block_name = 'fcontrolpanel-'. $name;
+          $block_name = 'fcontrolpanel-' . $name;
           $admin_toolbar = variable_get('admin_toolbar', NULL);
           if (!$result = array_key_exists($block_name, $admin_toolbar['blocks'])) {
             // Add block to Admin Toolbar.
@@ -93,8 +93,8 @@ function fcontrolpanel_modules_enabled($modules) {
 
 /**
  * Implements hook_modules_disabled().
- * 
- * Check for fcontrol objects. If there are any, remove them 
+ *
+ * Check for fcontrol objects. If there are any, remove them
  * from the Admin Toolbar.
  */
 function fcontrolpanel_modules_disabled($modules) {
@@ -110,8 +110,8 @@ function fcontrolpanel_modules_disabled($modules) {
           $packages = fcontrolpanel_get_packages();
           $package_names = array();
           foreach ($packages as $package) {
-            $package_names[] = $package['package_name'];  
-          } 
+            $package_names[] = $package['package_name'];
+          }
           $admin_toolbar = variable_get('admin_toolbar', NULL);
           $remove = array();
           foreach ($admin_toolbar['blocks'] as $block_name => $value) {
@@ -119,7 +119,7 @@ function fcontrolpanel_modules_disabled($modules) {
               if (substr($block_name, 0, 14) == 'fcontrolpanel-') {
                 $name = substr($block_name, 14);
                 if (!in_array($name, $package_names)) { // It's an orphan.
-                  $remove[] = $block_name; 
+                  $remove[] = $block_name;
                 }
               }
             }
@@ -128,7 +128,7 @@ function fcontrolpanel_modules_disabled($modules) {
           // Remove orphans.
           if ($remove) {
             foreach ($remove as $orphan) {
-              unset($admin_toolbar['blocks'][$orphan]); 
+              unset($admin_toolbar['blocks'][$orphan]);
             }
             variable_set('admin_toolbar', $admin_toolbar);
           }
@@ -285,7 +285,7 @@ function theme_fcontrolpanel_admin_block($variables) {
 
 /**
  * Turn a simple query string into an array.
- * 
+ *
  * @param $fcontrol
  *  object, fcontrol
  *
@@ -295,7 +295,7 @@ function theme_fcontrolpanel_admin_block($variables) {
 function _fcontrolpanel_query($fcontrol) {
   if ($query = $fcontrol->query) {
     // Process query string, break key/value pairs like this, 'x=y&a=b'
-    // into an array like this, $query = array( 'x' => 'y', 'a' => 'b' ) 
+    // into an array like this, $query = array( 'x' => 'y', 'a' => 'b' )
     $query = array();
     $pairs = explode('&', $fcontrol->query);
     foreach ($pairs as $pair) {
@@ -304,17 +304,17 @@ function _fcontrolpanel_query($fcontrol) {
       $value = check_plain($q[1]);
       $query[$key] = $value;
     }
-    return $query; 
-  } 
+    return $query;
+  }
   else {
-    return FALSE;  
+    return FALSE;
   }
 }
 
 /**
  * @param $package_title
  *  string, package name
- * 
+ *
  * @return $name
  *  string, machine name
  */
@@ -365,7 +365,7 @@ function fcontrolpanel_get_packages() {
           $packages[$package]['disabled'] = FALSE;
         }
         else { // $fcontrol->disabled does exist
-          if (!$fcontrol->disabled) { 
+          if (!$fcontrol->disabled) {
             $packages[$package]['disabled'] = FALSE;
           }
         }
