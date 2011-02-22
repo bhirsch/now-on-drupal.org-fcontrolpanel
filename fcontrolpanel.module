@@ -174,7 +174,6 @@ function fcontrolpanel_theme() {
 /**
  * Implements hook_block_info().
  */
-// TODO $delta (that is, $n) should be a unique string id. It should still work with numeric IDs. But better to change to strings.
 function fcontrolpanel_block_info() {
   $packages = fcontrolpanel_get_packages();
   theme('fcontrolpanel_admin_tabs', array('count' => count($packages))); //todo temp, handle additional tabs
@@ -232,8 +231,9 @@ function theme_fcontrolpanel_admin_tabs($variables) {
  * Each package (feature set) gets a corresponding block
  * for the admin module's admin toolbar.
  *
- * @param $package
- *  array, all the fcontrols for the package.
+ * @param $variables
+ *  - $variables['package'] is an array. It includes all the fcontrol objects
+ *    in the package.
  *
  * @return $output
  *  string, HTML for block content.
