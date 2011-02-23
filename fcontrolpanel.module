@@ -74,18 +74,18 @@ function fcontrolpanel_modules_enabled($modules) {
     $info = drupal_parse_info_file($path);
     if ($fcontrols = $info['features']['fcontrolpanel_fcontrol']) {
       if (module_exists('admin') && variable_get('fcontrolpanel_admin', TRUE)) {
+        $admin_toolbar = admin_get_settings();
         foreach ($fcontrols as $fcontrol_name) {
           $fcontrol = fcontrolpanel_fcontrol_load($fcontrol_name);
           $name = fcontrolpanel_package_name($fcontrol->package);
           // Check if block is already on admin toolbar.
           $block_name = 'fcontrolpanel-' . $name;
-          $admin_toolbar = variable_get('admin_toolbar', NULL);
           if (!$result = array_key_exists($block_name, $admin_toolbar['blocks'])) {
             // Add block to Admin Toolbar.
             $admin_toolbar['blocks'][$block_name] = 1;
-            variable_set('admin_toolbar', $admin_toolbar);
           }
         }
+        variable_set('admin_toolbar', $admin_toolbar);
       }
     }
   }
@@ -192,7 +192,7 @@ function fcontrolpanel_block_info() {
  */
 function fcontrolpanel_block_view($delta) {
   $packages = fcontrolpanel_get_packages();
-  if (!$packages[$delta]['disabled']) { // Ignore disabled controls.
+  if ($packages[$delta] && !$packages[$delta]['disabled']) {
     $package = $packages[$delta];
     $block['subject'] = t(check_plain($package['package_title']));
     $block['content'] = theme('fcontrolpanel_admin_block', array('package' => $package));
@@ -258,12 +258,8 @@ function theme_fcontrolpanel_admin_block($variables) {
     $weight = (property_exists($fcontrol, 'weight') && $fcontrol->weight != NULL) ? $fcontrol->weight : 0;
     $name = $fcontrol->name;
     $key = $weight . '-' . $name;
-    //$desc = t($fcontrol->description);
     if (user_access($perm)) {
       $link = ($query) ? l($txt, $path, array('query' => $query)) : l($txt, $path);
-      //$description = '<span class="menu-description"><span class="icon"></span>'. $desc .'</span>';
-      //$output .= '<li class="leaf">'. $link . $description .'</li>';
-      //$output .= '<li class="leaf">'. $link .'</li>';
       $lis[$key] = '<li class="leaf">' . $link . '</li>';
     }
   }
