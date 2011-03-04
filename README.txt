@@ -10,7 +10,7 @@ The Features Control Panel module enables you to:
 Installation 
 ---------------
 Place the entire fcontrolpanel folder into your modules directory.
-Go to Administer -> Site building -> Modules and enable the 
+Go to Administer -> Structure -> Modules and enable the 
 Features Control Panel module. 
 
 Admin module integration
@@ -44,28 +44,11 @@ information:
 
 Features
 -----------
-To export controls go to Administer -> Site building -> Features.
+To export controls go to Administer -> Structure -> Features.
 
 In Drupal 6, if you want your new feature module to automatically 
 enable/disable Admin blocks on the Admin Toolbar, add this snippet to your 
 .module file: 
-
-Add this to your features module's .module file:
-/**
- * Implementation of hook_enable().
- */
-function myfeature_enable() {
-  // update admin toolbar
-  fcontrolpanel_admin_toolbar('enable');  
-}
-
-/**
- * Implementation of hook_disable().
- */
-function myfeature_disable() {
-  // update admin toolbar
-  fcontrolpanel_admin_toolbar('disable');  
-}
 
 Maintainer
 -------------
